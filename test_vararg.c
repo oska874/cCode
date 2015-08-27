@@ -7,6 +7,12 @@ int vararg2(int cmd,...);
 
 int main()
 {
+    char *str="1234";
+    printf("%s \n",str);
+    strcpy(str,"567");
+    printf("1111\n");
+    printf("%s \n",str);
+
 	vararg("abc","def","ghia","/0");
     vararg2(1,2);
 	return 0;
