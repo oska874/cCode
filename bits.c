@@ -1,8 +1,5 @@
-
 #include <sys/types.h>
-
 #define  BIT_WIDTH 32
-
 int get_bit_val(unsigned int* src, int16_t seq)
 {
         int x;
@@ -34,7 +31,7 @@ int get_all_one(unsigned int n)
 {
 	unsigned int c =0 ;
 	for (c =0; n; c++) {
-		n &= (n -1) ; // 清除最低位的1
+		n &= (n -1) ; //mask the last bit
 	}
 	return c ;
 }
