@@ -3,18 +3,17 @@
 
 void hello(void)
 {
-    printf("bye\n");
+    printf("bye1\n");
+    exit(1);
 }
 int main(void)
 {
     int ret = 0;
-    //ret = execl("/usr/bin/vim", "vi", NULL);
+    ret = execl("/usr/bin/vim", "vi", NULL);
     if (ret ==-1){
         perror("open fail\n");
         exit(0);
     }
-    atexit(hello);
-
+    
     return 0;
 }
-
