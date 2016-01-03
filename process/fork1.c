@@ -5,12 +5,13 @@
 #include <fcntl.h>
 #include <linux/fs.h>
 #include <linux/limits.h>
+#include <wait.h>
 #include <unistd.h>
 
 void hello(void)
 {
-    printf("bye1\n");
-    exit(1);
+    for(int i=0;i<10;i++) 
+        printf("bye1\n");
 }
 
 int main(void)
@@ -19,7 +20,8 @@ int main(void)
     pid_t pid;
     pid = fork();
     if (pid != 0) {//parent
-        printf("in p\n");
+        wait(&ret);
+        printf("c pid %d ret %d\n",pid,ret);
     }
     else if (pid == 0) { //child
         hello();
