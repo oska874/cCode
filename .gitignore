@@ -30,6 +30,7 @@
 
 # temp file
 *.stackdump
+*~
 
 # =========================
 # Operating System Files
