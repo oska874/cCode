@@ -1,0 +1,3 @@
+AUX_SOURCE_DIRECTORY(. DIR_ST_SRCS)                                                                                                                                                                         
+ADD_LIBRARY(tcp_client ${DIR_ST_SRCS}) 
+ADD_LIBRARY(tcp_server ${DIR_ST_SRCS}) 
