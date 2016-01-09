@@ -19,6 +19,10 @@ extern "C" {
 #endif
 
     void mp_example0(void);
+    void mp_example1(void);
+    void mp_example2(void);
+    void mp_example3(void);
+    void mp_example4(void);
 
 
 #ifdef __cplusplus

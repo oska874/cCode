@@ -6,14 +6,14 @@
 #include "include/mem_test.h"
 #include "include/sys_test.h"
 #include "include/mp_test.h"
-#include "include/mp_test.h"
+#include "include/mt_test.h"
 
 int main(int argc,char *argv[])
 {
     if (argc != 2){
         printf("usage: xx yy\nyy=0 file test\n=1 tcp server\n=2 tcp client\n"
             "=3 udp server\n=4 udp client\n=5 mem test\n=6 multi process\n"
-            "=7 multi thread\n=8 sys/procfs\n=9 TBD\n");
+            "=7 multi thread\n=8 sys/procfs\n=9 share mem(api)\n");
         return 0;
     }
     int method = atoi(argv[1]);
@@ -64,15 +64,28 @@ int main(int argc,char *argv[])
         break;
     case 6:
         printf("multi process\n");
+        printf("test 0\n");
         mp_example0();
+        printf("test 1\n");
+        mp_example1();
+        printf("test 2\n");
+        mp_example2();
+        printf("test 3\n");
+        mp_example3();
+        printf("test 4\n");
+        mp_example4();
         break;
     case 7:
         printf("multi thread\n");
+        pthread_test();
         break;
     case 8:
         printf("sys test\n");
         printf("shell exec\n");
         exec_shell();
+    case 9:
+        printf("sharing memory\n");
+        shmem_test();
             
     }    
     return 0;

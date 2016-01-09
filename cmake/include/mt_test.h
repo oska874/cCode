@@ -5,30 +5,25 @@
  */
 
 /* 
- * File:   mem_test.h
+ * File:   mp_test.h
  * Author: zl
  *
- * Created on 2016年1月8日, 下午4:08
+ * Created on 2016年1月9日, 下午2:03
  */
 
-#ifndef MEM_TEST_H
-#define MEM_TEST_H
+#ifndef MTT_TEST_H
+#define MTT_TEST_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    int open_mmap();
-    int open_anony_mmap();
-    int close_mmap();
-    void read_mem();
-    void write_mem();
-    
-    int shmem_test(void);
+    int pthread_test(void );
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MEM_TEST_H */
+#endif /* MP_TEST_H */
 
