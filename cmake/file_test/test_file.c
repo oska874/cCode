@@ -20,7 +20,7 @@ void write_file(char *fname)
     int ret;
     char *wbuf;
     
-    fd = open(fname,O_RDWR|O_CREAT);
+    fd = open(fname,O_RDWR|O_CREAT,S_IRWXU|S_IRUSR|S_IWUSR|S_IXUSR);
     if (fd == -1 ){
         perror("open file fail ");
         exit(-1);

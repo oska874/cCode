@@ -1,2 +1,2 @@
-AUX_SOURCE_DIRECTORY(. DIR_FT_SRCS)                                                                                                                                                                         
+AUX_SOURCE_DIRECTORY(. DIR_FT_SRCS)
 ADD_LIBRARY(test_file ${DIR_FT_SRCS})   
