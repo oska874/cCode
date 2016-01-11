@@ -23,6 +23,7 @@ extern "C" {
     void mp_example2(void);
     void mp_example3(void);
     void mp_example4(void);
+    void mp_example5(void);
 
 
 #ifdef __cplusplus

@@ -7,6 +7,7 @@
 #include "include/sys_test.h"
 #include "include/mp_test.h"
 #include "include/mt_test.h"
+#include "include/sig_test.h"
 
 int main(int argc,char *argv[])
 {
@@ -74,19 +75,37 @@ int main(int argc,char *argv[])
         mp_example3();
         printf("test 4\n");
         mp_example4();
+        printf("test 5\n");
+        mp_example5();
         break;
     case 7:
-        printf("multi thread\n");
-        pthread_test();
+        printf("multi thread\n10\n");
+        printf("test 0\n");
+        pthread_test();//多线程基础
+        printf("test 1\n");
+        pthread_test2();//互斥量和读写锁
+        printf("test 2\n");
+        pthread_test3();//条件变量
         break;
     case 8:
         printf("sys test\n");
         printf("shell exec\n");
+        printf("test 0\n");
         exec_shell();
+        printf("test 1\n");
+        exec_shell2();
     case 9:
         printf("sharing memory\n");
         shmem_test();
-            
+	break;
+    case 10:
+	printf("signal\n");
+	sig_test1();
+	sig_test2();
+	sig_test3();
+	break;
+    default:
+	break;            
     }    
     return 0;
 }
