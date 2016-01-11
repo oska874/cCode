@@ -30,4 +30,5 @@ int main()
         ;;
     raise(SIGINT);/*发送SIGINT信号*/
     raise(SIGQUIT);
+    return 0;
 }

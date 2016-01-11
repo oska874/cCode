@@ -19,10 +19,11 @@ extern "C" {
 #endif
     
     int exec_shell(void);
+    int exec_shell2(void);
 
 
 
-
+    
 #ifdef __cplusplus
 }
 #endif

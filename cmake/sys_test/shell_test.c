@@ -5,6 +5,9 @@
  */
 
 #include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+
 int exec_shell(void)
 {
     int ret;
@@ -12,3 +15,12 @@ int exec_shell(void)
     return ret;
 }
 
+ 
+int exec_shell2(void)
+{
+    printf("exec series functions test\n"); 
+    char *const ps_argv[] = {"ps","ax",0}; 
+    execv("/bin/ps",ps_argv);
+    printf("Done.\n");
+    return 0;
+}

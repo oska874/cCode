@@ -5,28 +5,26 @@
  */
 
 /* 
- * File:   mp_test.h
+ * File:   sig_test.h
  * Author: zl
  *
- * Created on 2016年1月9日, 下午2:03
+ * Created on 2016年1月11日, 上午11:09
  */
 
-#ifndef MTT_TEST_H
-#define MTT_TEST_H
+#ifndef SIG_TEST_H
+#define SIG_TEST_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-    int pthread_test(void );
-    int pthread_test2(void );
-    int pthread_test2(void);
-    int pthread_test3(void);
-
+    int sig_test1(void);
+    int sig_test2(void);
+    int sig_test3(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MP_TEST_H */
+#endif /* SIG_TEST_H */
 

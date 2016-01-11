@@ -14,6 +14,7 @@
 #include <string.h>
 #include <signal.h>
 #include <errno.h>
+#include <sys/msg.h>
 
 //at exit call
 void child_exit()
@@ -25,7 +26,6 @@ void father_exit()
 {
     printf("father %d exit\n",getpid());
 }
-
 
 //fork
 void mp_example0(void)
@@ -193,6 +193,7 @@ void mp_example3(void)
     close(pfd);
 }
 
+//kill process
 void mp_example4(void)
 {
     pid_t pid;
@@ -201,8 +202,6 @@ void mp_example4(void)
     
     tid = fork();
     if( tid == 0){
-        printf("1111\n");
-        //atexit(child_exit);
         printf("i'm child %d\n",getpid());
         int i=0;
         while(1){
@@ -220,6 +219,56 @@ void mp_example4(void)
         pid=getpid();
         printf("i'm father %d\n",pid);
         sleep(10);
+        ret = waitpid(tid,NULL,WNOHANG); //check child process status
+        if(!ret) //child process still running 
+            kill(tid,SIGTERM); //using signal to kill child process
+        printf("all done\n");
+    }
+}
+
+//消息队列
+void mp_example5(void)
+{
+    pid_t pid;
+    pid_t tid;
+    int ret;
+    int msgid;
+    
+    
+    msgid = msgget((key_t)1234, 0666 | IPC_CREAT); 
+    if (msgid == -1) {
+        printf("msgget fail ");
+        exit(-1);
+    }
+    
+    tid = fork();
+    if( tid == 0){
+        printf("i'm child %d\n",getpid());
+        char *histr="hello\n";
+        ret = msgsnd(msgid,histr,6,MSG_NOERROR|IPC_NOWAIT);
+        if(ret) {
+            perror("send fail ");
+            exit(-1);
+        }
+         
+        exit(0);    
+    }
+    else if (tid == -1){
+        perror("fork fail ");
+    }
+    else {
+        //waitpid(tid,&ret,WNOHANG);
+        pid=getpid();
+        printf("i'm father %d\n",pid);
+        sleep(2);
+        char buf[100];
+        ret = msgrcv(msgid,buf,10,0,MSG_NOERROR|IPC_NOWAIT);
+        if(ret<0){
+            perror("msg recv fail ");
+            exit(-3);
+        }
+        buf[ret]='\0';
+        printf("recv %s\n",buf);            
         ret = waitpid(tid,NULL,WNOHANG); //check child process status
         if(!ret) //child process still running 
             kill(tid,SIGTERM); //using signal to kill child process
