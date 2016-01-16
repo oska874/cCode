@@ -1,0 +1,2 @@
+/usr/bin/ar cr libtest_mtt.a  CMakeFiles/test_mtt.dir/test_mt.c.o
+/usr/bin/ranlib libtest_mtt.a

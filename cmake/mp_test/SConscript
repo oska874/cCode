@@ -1,4 +1,0 @@
-env = Environment()
-env.Append(CCFLAGS = '-pthread -lrt -g -std=gnu99')
-obj = env.Object(Glob("*.c"))
-Return("obj")

@@ -1,0 +1,1 @@
+/usr/bin/cc   -static -O0 -Wall -std=gnu99 -pthread    CMakeFiles/RTS.dir/main.c.o  -o RTS -rdynamic file_test/libtest_file.a socket_test/libsocket_test.a mem_test/libtest_mem.a sys_test/libshell_test.a mp_test/libtest_mp.a mt_test/libtest_mtt.a signal_test/libtest_sig.a 

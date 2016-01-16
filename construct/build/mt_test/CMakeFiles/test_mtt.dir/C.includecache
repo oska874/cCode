@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/workspace/github/cCode/cmake/mt_test/test_mt.c
+stdio.h
+-
+pthread.h
+-
+stdlib.h
+-
+unistd.h
+-
+

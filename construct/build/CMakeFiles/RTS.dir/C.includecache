@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/workspace/github/cCode/cmake/include/mem_test.h
+
+/workspace/github/cCode/cmake/include/mp_test.h
+
+/workspace/github/cCode/cmake/include/mt_test.h
+
+/workspace/github/cCode/cmake/include/sig_test.h
+
+/workspace/github/cCode/cmake/include/socket_test.h
+
+/workspace/github/cCode/cmake/include/sys_test.h
+
+/workspace/github/cCode/cmake/include/test_file.h
+
+/workspace/github/cCode/cmake/main.c
+stdio.h
+-
+stdlib.h
+-
+include/test_file.h
+/workspace/github/cCode/cmake/include/test_file.h
+include/socket_test.h
+/workspace/github/cCode/cmake/include/socket_test.h
+include/mem_test.h
+/workspace/github/cCode/cmake/include/mem_test.h
+include/sys_test.h
+/workspace/github/cCode/cmake/include/sys_test.h
+include/mp_test.h
+/workspace/github/cCode/cmake/include/mp_test.h
+include/mt_test.h
+/workspace/github/cCode/cmake/include/mt_test.h
+include/sig_test.h
+/workspace/github/cCode/cmake/include/sig_test.h
+

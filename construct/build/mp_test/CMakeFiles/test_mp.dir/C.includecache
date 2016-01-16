@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/workspace/github/cCode/cmake/mp_test/test_mp.c
+unistd.h
+-
+stdio.h
+-
+stdlib.h
+-
+sys/types.h
+-
+sys/wait.h
+-
+sys/stat.h
+-
+fcntl.h
+-
+string.h
+-
+signal.h
+-
+errno.h
+-
+sys/msg.h
+-
+
