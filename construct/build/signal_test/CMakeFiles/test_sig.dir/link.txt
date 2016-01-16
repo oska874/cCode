@@ -1,0 +1,2 @@
+/usr/bin/ar cr libtest_sig.a  CMakeFiles/test_sig.dir/signal_test.c.o
+/usr/bin/ranlib libtest_sig.a

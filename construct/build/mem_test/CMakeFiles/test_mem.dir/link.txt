@@ -1,0 +1,2 @@
+/usr/bin/ar cr libtest_mem.a  CMakeFiles/test_mem.dir/shmem_test.c.o CMakeFiles/test_mem.dir/test_mem.c.o
+/usr/bin/ranlib libtest_mem.a

@@ -1,0 +1,2 @@
+/usr/bin/ar cr libtest_mp.a  CMakeFiles/test_mp.dir/test_mp.c.o
+/usr/bin/ranlib libtest_mp.a

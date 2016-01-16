@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/workspace/github/cCode/cmake/signal_test/signal_test.c
+string.h
+-
+signal.h
+-
+stdio.h
+-
+unistd.h
+-
+stdlib.h
+-
+

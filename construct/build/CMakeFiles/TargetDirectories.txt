@@ -1,0 +1,8 @@
+/workspace/github/cCode/cmake/build/CMakeFiles/RTS.dir
+/workspace/github/cCode/cmake/build/sys_test/CMakeFiles/shell_test.dir
+/workspace/github/cCode/cmake/build/socket_test/CMakeFiles/socket_test.dir
+/workspace/github/cCode/cmake/build/file_test/CMakeFiles/test_file.dir
+/workspace/github/cCode/cmake/build/mem_test/CMakeFiles/test_mem.dir
+/workspace/github/cCode/cmake/build/mp_test/CMakeFiles/test_mp.dir
+/workspace/github/cCode/cmake/build/mt_test/CMakeFiles/test_mtt.dir
+/workspace/github/cCode/cmake/build/signal_test/CMakeFiles/test_sig.dir

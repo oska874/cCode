@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/workspace/github/cCode/cmake/mem_test/shmem_test.c
+sys/types.h
+-
+sys/ipc.h
+-
+sys/shm.h
+-
+unistd.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+
+/workspace/github/cCode/cmake/mem_test/test_mem.c
+sys/mman.h
+-
+stdio.h
+-
+unistd.h
+-
+stdlib.h
+-
+fcntl.h
+-
+

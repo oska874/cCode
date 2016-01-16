@@ -1,0 +1,2 @@
+/usr/bin/ar cr libshell_test.a  CMakeFiles/shell_test.dir/shell_test.c.o
+/usr/bin/ranlib libshell_test.a

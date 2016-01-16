@@ -1,0 +1,2 @@
+/usr/bin/ar cr libsocket_test.a  CMakeFiles/socket_test.dir/tcp_client.c.o CMakeFiles/socket_test.dir/tcp_server.c.o
+/usr/bin/ranlib libsocket_test.a
