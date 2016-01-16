@@ -30,7 +30,7 @@ int shmem_test(void)
     
     if(pid == 0){
         shmaddr = (char *)shmat(mid, NULL, 0);
-        if ( (int)shmaddr == -1 ){
+        if ( shmaddr == (char *)-1 ){
             perror("shmat addr error ") ;
             exit(-1);
         }
@@ -45,12 +45,12 @@ int shmem_test(void)
             perror("shmctl shm error ") ;
             exit(-1) ;
         }
-        printf("shm_segsz =%d bytes\n", buf.shm_segsz ) ;
+        printf("shm_segsz =%d bytes\n",(int) buf.shm_segsz ) ;
         printf("parent pid=%d, shm_cpid = %d \n", getpid(), buf.shm_cpid ) ;
         printf("chlid pid=%d, shm_lpid = %d \n",pid , buf.shm_lpid ) ;
         
         shmaddr = (char *) shmat(mid, NULL, 0) ;
-        if ((int)shmaddr == -1 ){
+        if (shmaddr == (char *)-1 ){
             perror("shmat addr error ") ;
             exit(-2);
         }
