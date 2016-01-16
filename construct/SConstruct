@@ -1,14 +1,14 @@
 import os
 
 env = Environment()
+env.Append(CCFLAGS = " -g -std=gnu99")
 
-env.Append(CCFLAGS = "-pthread -lrt -g -std=gnu99")
+Export('env')
 
 subobj = SConscript(['file_test/SConscript','mem_test/SConscript','mp_test/SConscript','mt_test/SConscript','signal_test/SConscript','socket_test/SConscript','sys_test/SConscript'])
 
-#subobj = SConscript(['*/SConscript'])
-
 obj = subobj + env.Object(Glob("*.c"))
 
-env.Program("rrr",list(obj),LIBS=['pthread'])
+env.Append(LINKFLAGS = '-pthread')
+env.Program("rrr",list(obj))#,LIBS=['pthread'])
 
