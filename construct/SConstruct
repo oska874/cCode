@@ -1,7 +1,9 @@
 import os
+import ccconfig
 
-env = Environment()
-env.Append(CCFLAGS = " -g -std=gnu99")
+env=Environment(AS = ccconfig.AS, ASFLAGS = ccconfig.AFLAGS,
+	CC = ccconfig.CC, CCFLAGS = ccconfig.CFLAGS,
+	AR = ccconfig.AR, ARFLAGS = '-rc')
 
 Export('env')
 
@@ -10,5 +12,6 @@ subobj = SConscript(['file_test/SConscript','mem_test/SConscript','mp_test/SCons
 obj = subobj + env.Object(Glob("*.c"))
 
 env.Append(LINKFLAGS = '-pthread')
-env.Program("rrr",list(obj))#,LIBS=['pthread'])
+
+env.Program("rrr",list(obj))
 
