@@ -27,10 +27,12 @@
 *.i*86
 *.x86_64
 *.hex
+*.pyc
 
 # temp file
 *.stackdump
 *~
+*.*.orig
 
 # =========================
 # Operating System Files
