@@ -7,15 +7,15 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
-const int NUM_THREADS = 5;
+const int NUM_THREADS = 1;
 void *thread_main( void *threadid)
 {
     /* 把自己加入cgroup中（syscall(SYS_gettid)为得到线程的系统tid） */
     char cmd[128];
     sprintf (cmd, "echo %ld >> /sys/fs/cgroup/cpu/zz/tasks " , syscall(SYS_gettid));
     system (cmd);
-    sprintf (cmd, "echo %ld >> /sys/fs/cgroup/cpuset/zz/tasks" , syscall(SYS_gettid));
-    system (cmd);
+//   sprintf (cmd, "echo %ld >> /sys/fs/cgroup/cpuset/zz/tasks" , syscall(SYS_gettid));
+    //  system (cmd);
     long tid;
     tid = ( long )threadid;
     printf ( "Hello World! It's me, thread #%ld, pid #%ld!\n" , tid, syscall(SYS_gettid));
@@ -28,10 +28,10 @@ void *thread_main( void *threadid)
 int main ( int argc, char *argv[])
 {
     int num_threads;
-    if (argc > 1){
+    if (argc > 1) {
         num_threads = atoi (argv[1]);
     }
-    if (num_threads<=0 || num_threads>=100){
+    if (num_threads<=0 || num_threads>=100) {
         num_threads = NUM_THREADS;
     }
     mkdir("/sys/fs/cgroup/cpu/zz",755);
@@ -39,14 +39,14 @@ int main ( int argc, char *argv[])
     system ( "echo 20000> /sys/fs/cgroup/cpu/zz/cpu.cfs_quota_us" );
     mkdir("/sys/fs/cgroup/cpuset/zz",755);
     /* 限制CPU只能使用#1核*/
-    system ( "echo \"1\" > /sys/fs/cgroup/cpuset/zz/cpuset.cpus" );
+    system ( "echo \"0\" > /sys/fs/cgroup/cpuset/zz/cpuset.cpus" );
     pthread_t* threads = (pthread_t*) malloc ( sizeof (pthread_t)*num_threads);
     int rc;
     long t;
-    for (t=0; t<num_threads; t++){
+    for (t=0; t<num_threads; t++) {
         printf ( "In main: creating thread %ld\n" , t);
         rc = pthread_create(&threads[t], NULL, thread_main, ( void *)t);
-        if (rc){
+        if (rc) {
             printf ( "ERROR; return code from pthread_create() is %d\n" , rc);
             exit (-1);
         }
@@ -55,4 +55,3 @@ int main ( int argc, char *argv[])
     pthread_exit(NULL);
     free (threads);
 }
-        
