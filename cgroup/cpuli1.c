@@ -12,14 +12,14 @@ void *thread_main( void *threadid)
 {
     /* 把自己加入cgroup中（syscall(SYS_gettid)为得到线程的系统tid） */
     char cmd[128];
+    long tid;
+    int a=0;
     sprintf (cmd, "echo %ld >> /sys/fs/cgroup/cpu/zz/tasks " , syscall(SYS_gettid));
     system (cmd);
-//   sprintf (cmd, "echo %ld >> /sys/fs/cgroup/cpuset/zz/tasks" , syscall(SYS_gettid));
-    //  system (cmd);
-    long tid;
+//  sprintf (cmd, "echo %ld >> /sys/fs/cgroup/cpuset/zz/tasks" , syscall(SYS_gettid));
+//  system (cmd);    
     tid = ( long )threadid;
-    printf ( "Hello World! It's me, thread #%ld, pid #%ld!\n" , tid, syscall(SYS_gettid));
-    int a=0;
+    printf ( "Hello World! It's me, thread #%ld, pid #%ld!\n" , tid, syscall(SYS_gettid));    
     while (1) {
         a++;
     }
