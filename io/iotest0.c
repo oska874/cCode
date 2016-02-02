@@ -11,6 +11,9 @@
 #include <string.h>
 #include <fcntl.h>
 
+int fd;
+char fname[]="/tmp/testvXXXXXX"; //must be XXXXXX
+
 void vread(int fd,const struct iovec *iov,int cnt )
 {
     int ret=0;
@@ -26,25 +29,49 @@ void vwrite(int fd,const struct iovec *iov,int cnt )
     if(ret <= 0)
         printf("write nond %d\n",ret);
 }
-int main()
-{    
-    struct iovec wiov[2],riov[2];
-    char *buf;
-    int fd ;
+
+void openss()
+{
     int ret;
-    char fname[]="/tmp/testvXXXXXX"; //must be XXXXXX
+    
     ret = mkstemp(fname);
     if(ret <0) {
         perror("mkstemp fail");
         fd = open("/tmp/testv",O_RDWR|O_CREAT);
     }
     else{
-        fd = open(fname,O_RDWR);
+        fd = open(fname,O_RDWR|O_RSYNC);
     }
     if (fd <0){
         perror("open fail");
         exit(-1);
     }
+
+}
+
+void closess()
+{
+    close(fd);
+    unlink(fname); 
+}
+
+void fdfile()
+{
+    FILE *f1 ;
+    f1 = fdopen(fd,"wr+");
+    fd = fileno(f1);
+}
+int main()
+{    
+    
+    struct iovec wiov[2],riov[2];
+    char *buf;
+    int ret;
+    
+    openss();
+
+    fdfile();
+    
     buf =(char *) malloc(1024);
     
     memset(buf,0xac,512);
@@ -66,6 +93,7 @@ int main()
     
     memset(buf,0,1024);
    
+#if 1
     //readv after writev should close file ,or won't read anything
     close(fd);
    
@@ -74,12 +102,12 @@ int main()
         perror("open fail2");
         exit(-2);
     }
+#endif
+    
     vread(fd,riov,2);
     
     printf("%x %x \n",buf[0],buf[512]);    
     
-    close(fd);
     free(buf);
-    unlink(fname);
     return 0;
 }
