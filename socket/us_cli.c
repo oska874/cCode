@@ -18,7 +18,6 @@
 
 #define BACKLOG         5
 
-#define STDIO_FILENO    1
 
 int main(void)
 {   
@@ -38,7 +37,7 @@ int main(void)
     if(connect(sfd, (struct sockaddr *)&addr, sizeof(struct sockaddr_un)) == -1)
         exit(-2);
 
-    while((numRead = read(STDIO_FILENO, buf, BUF_SIZE)) > 0)
+    while((numRead = read(STDIN_FILENO, buf, BUF_SIZE)) > 0)
         if(write(sfd, buf, numRead) != numRead)
             perror("parital/failed write ");
 
