@@ -19,7 +19,6 @@
 
 #define BACKLOG         5
 
-#define STDIO_FILENO    1
 int main(void)
 {   
     struct sockaddr_un addr;
