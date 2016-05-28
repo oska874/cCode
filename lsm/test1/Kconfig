@@ -1,0 +1,8 @@
+config     SECURITY_GEEK
+   bool     "geek support"
+   depends on SECURITY
+   select     SECURITYFS
+   select     SECURITY_PATH
+   default     n
+   help
+        introduction of geek modules
