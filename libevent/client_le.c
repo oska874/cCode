@@ -49,8 +49,6 @@ int main(int argc, char** argv)
     struct event* ev_cmd = event_new(base, STDIN_FILENO,
                                      EV_READ | EV_PERSIST, cmd_msg_cb,
                                      (void*)&sockfd);
-
-
     event_add(ev_cmd, NULL);
 
     event_base_dispatch(base);
@@ -58,11 +56,6 @@ int main(int argc, char** argv)
     printf("finished \n");
     return 0;
 }
-
-
-
-
-
 
 void cmd_msg_cb(int fd, short events, void* arg)
 {
@@ -81,7 +74,6 @@ void cmd_msg_cb(int fd, short events, void* arg)
     write(sockfd, msg, ret);
 }
 
-
 void socket_read_cb(int fd, short events, void *arg)
 {
     char msg[1024];
@@ -97,8 +89,6 @@ void socket_read_cb(int fd, short events, void *arg)
 
     printf("recv %s from server\n", msg);
 }
-
-
 
 typedef struct sockaddr SA;
 int tcp_connect_server(const char* server_ip, int port)
@@ -135,4 +125,3 @@ int tcp_connect_server(const char* server_ip, int port)
 
     return sockfd;
 }
-

@@ -28,7 +28,6 @@ int main(int argc, char** argv)
                                         accept_cb, base);
     event_add(ev_listen, NULL);
 
-
     event_base_dispatch(base);
 
     return 0;
@@ -110,7 +109,6 @@ int tcp_server_init(int port, int listen_num)
     if( listen(listener, listen_num) < 0)
         goto error;
 
-
     //跨平台统一接口，将套接字设置为非阻塞状态
     evutil_make_socket_nonblocking(listener);
 
@@ -123,4 +121,3 @@ error:
 
     return -1;
 }
-
