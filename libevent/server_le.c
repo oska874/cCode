@@ -4,7 +4,8 @@
 
 #include<unistd.h>
 #include<event.h>
-#include <evutil.h>
+
+
 
 void accept_cb(int fd, short events, void* arg);
 void socket_read_cb(int fd, short events, void *arg);
@@ -33,19 +34,21 @@ int main(int argc, char** argv)
     return 0;
 }
 
+
+
 void accept_cb(int fd, short events, void* arg)
 {
     evutil_socket_t sockfd;
 
     struct sockaddr_in client;
-    socklen_t len;
+    socklen_t len = sizeof(client);
 
     sockfd = accept(fd, (struct sockaddr*)&client, &len );
     evutil_make_socket_nonblocking(sockfd);
 
     printf("accept a client %d\n", sockfd);
 
-    struct event_base* base = (event_base*)arg;
+    struct event_base* base = (struct event_base*)arg;
 
     //仅仅是为了动态创建一个event结构体
     struct event *ev = event_new(NULL, -1, 0, NULL, NULL);
@@ -67,8 +70,8 @@ void socket_read_cb(int fd, short events, void *arg)
 
     if( len <= 0 ) {
         printf("some error happen when read\n");
-        close(event_get_fd(ev));
         event_free(ev);
+        close(fd);
         return ;
     }
 
@@ -80,6 +83,8 @@ void socket_read_cb(int fd, short events, void *arg)
 
     write(fd, reply_msg, strlen(reply_msg) );
 }
+
+
 
 typedef struct sockaddr SA;
 int tcp_server_init(int port, int listen_num)
@@ -118,3 +123,4 @@ error:
 
     return -1;
 }
+

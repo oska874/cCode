@@ -12,6 +12,9 @@
 #include<event.h>
 #include<event2/util.h>
 
+
+
+
 int tcp_connect_server(const char* server_ip, int port);
 
 
@@ -47,6 +50,7 @@ int main(int argc, char** argv)
                                      EV_READ | EV_PERSIST, cmd_msg_cb,
                                      (void*)&sockfd);
 
+
     event_add(ev_cmd, NULL);
 
     event_base_dispatch(base);
@@ -54,6 +58,11 @@ int main(int argc, char** argv)
     printf("finished \n");
     return 0;
 }
+
+
+
+
+
 
 void cmd_msg_cb(int fd, short events, void* arg)
 {
@@ -126,3 +135,4 @@ int tcp_connect_server(const char* server_ip, int port)
 
     return sockfd;
 }
+
