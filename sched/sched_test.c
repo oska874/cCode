@@ -36,6 +36,9 @@ uint64_t max=0;
 uint64_t min=0;
 uint64_t avg=0;
 uint64_t num=0;
+uint64_t overs=0;
+uint64_t overs1=0;
+uint64_t overs2=0;
 
 void voidvoid()
 {
@@ -43,7 +46,7 @@ void voidvoid()
 
 void calcute()
 {
-    printf("max %llu min %llu avg %llu num %llu sum %llu\n",max,min,avg,num,sum);
+    printf("max %llu min %llu avg %llu num %llu sum %llu overs %llu %llu %llu\n",max,min,avg,num,sum,overs,overs1,overs2);
     fprintf(stderr," PID = %d\t scheduler %d priority: %d\tEND TIME is %ld\n",getpid(),sched_getscheduler(getpid()),getpriority(0,0),time(NULL));
     exit(0);
 }
@@ -54,10 +57,15 @@ int test_func()
     sigemptyset(&act.sa_mask);
     act.sa_flags=SA_SIGINFO; 
 
-    int ret;
-    struct timeval cur_time;
-    uint64_t time_u=0,told=0,div=0;;
-    uint64_t over = 2000;
+    int32_t ret,runtime=600000;
+    struct timeval cur_time,sdiv,sold;
+    uint64_t div=0;;
+    uint64_t over = 20000;
+    uint64_t temp;
+    sdiv.tv_sec=0;
+    sdiv.tv_usec=0;
+    sold.tv_sec=0;
+    sold.tv_usec=0;
 
     ret = setpriority(PRIO_PROCESS,0,-10);
     if(ret <0){
@@ -65,26 +73,26 @@ int test_func()
         exit(-2);
     }
 
-    while(1){
+    while(runtime>0){
+    //while(1){
         ret = gettimeofday(&cur_time,NULL);       
 
         if(ret != 0){
             perror("get time error:");
             goto error1;
         }
-        time_u = cur_time.tv_sec*1000000+cur_time.tv_usec;
 
-        if (told == 0)
+        if (sold.tv_sec== 0 && sold.tv_usec ==0)
             goto next;
-
 //    printf("max %llu min %llu avg %llu num %llu sum %llu div %llu\n",max,min,avg,num,sum,div);
 
-
-        div=time_u - told;
-
+        sdiv.tv_sec=cur_time.tv_sec-sold.tv_sec;
+        sdiv.tv_usec=cur_time.tv_usec-sold.tv_usec;
+        div=sdiv.tv_sec*1000000+sdiv.tv_usec;
 #if 1
         if( div > over ){
-            printf("div large %llu %llu now %llu %llu\n",div,over,time_u,told);
+            printf("div large %llu %llu now %d %d %d %dn",
+                    div,over,cur_time.tv_sec,cur_time.tv_usec,sold.tv_sec,sold.tv_usec);
         }
         else{
         }
@@ -105,6 +113,18 @@ int test_func()
             max = div;
         if (min == 0 || min > div )
             min = div;
+
+        temp = div*10;
+
+        if(temp >13000){
+            overs++;
+        }
+        else if(temp >12000){
+            overs1++;
+        }
+        else if(temp >11000){
+            overs2++;
+        }
 #if 0
     act.sa_sigaction=calcute; 
     if(sigaction(SIGINT,&act,NULL) < 0) 
@@ -113,15 +133,15 @@ int test_func()
     } 
 #endif
 next:
-        told = time_u;
+        sold.tv_sec=cur_time.tv_sec;
+        sold.tv_usec=cur_time.tv_usec;
         usleep(1000);
+        runtime--;
     }
 
 error1:
     return 0;
 }
-
-
 
 int main(int argc,char* argv[])
 {
@@ -133,7 +153,6 @@ int main(int argc,char* argv[])
     { 
         printf("install signal error\n"); 
     } 
-
 
     int i;
     long interval;
@@ -183,6 +202,7 @@ int main(int argc,char* argv[])
     fprintf(stderr,"the  scheduler of PID(%ld) is %d, priority (%d),BEGIN time is :%ld\n",
             getpid(),sched_getscheduler(0),getpriority(0,0),time(NULL));
     test_func();
-    fprintf(stderr," PID = %d\t priority: %d\tEND TIME is %ld\n",getpid(),getpriority(0,0),time(NULL));
+    printf("max %llu min %llu avg %llu num %llu sum %llu overs %llu %llu %llu\n",max,min,avg,num,sum,overs,overs1,overs2);
+    fprintf(stderr," PID = %d\t scheduler %d priority: %d\tEND TIME is %ld\n",getpid(),sched_getscheduler(getpid()),getpriority(0,0),time(NULL));
     return 0;
 }
