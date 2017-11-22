@@ -32,7 +32,19 @@ int time2_test(void)
     struct tms tms0;
     time_t te0;
     int ret;
+    int i;
+    struct timespec timeres[10];
+    struct timespec timeres2[10];
         
+    clockid_t clocks[] = {
+        CLOCK_REALTIME,
+        CLOCK_MONOTONIC,/*单调时间，但是受ntp影响（adjtime）*/
+        CLOCK_MONOTONIC_RAW,/*基于硬件时间的原始时间，绝对单调*/
+        CLOCK_MONOTONIC_COARSE,/*低精度单调时间*/
+        CLOCK_PROCESS_CPUTIME_ID,/*本进程到当前代码系统CPU花费的时间*/
+        CLOCK_THREAD_CPUTIME_ID,
+        (clockid_t) -1 };
+
     te0 = time(NULL);
 
     ret = gettimeofday(&tv0,NULL);
@@ -44,7 +56,7 @@ int time2_test(void)
     if ((clock_t)ret == -1)
         perror("clock gettime fail ");
 
-    printf("clk per sec %d\n",sysconf(_SC_CLK_TCK));
+    printf("clk per sec %ld\n",sysconf(_SC_CLK_TCK));
     ret = times(&tms0);
     if(ret<0)
         perror("times fail ");
@@ -54,30 +66,33 @@ int time2_test(void)
     printf("tp sec %ld nsec %ld\n",tp0.tv_sec,tp0.tv_nsec);
     printf("tms sec %ld usec %ld\n",tms0.tms_utime,tms0.tms_stime);
 
-    clockid_t clocks[] = {
-        CLOCK_REALTIME,
-        CLOCK_MONOTONIC,
-        CLOCK_PROCESS_CPUTIME_ID,
-        CLOCK_THREAD_CPUTIME_ID,
-        (clockid_t) -1 };
-
-    int i;
-
     for (i = 0; clocks[i] != (clockid_t) -1; i++) {
        struct timespec res;
-
        int ret;
-
        ret = clock_getres (clocks[i], &res);
-
        if (ret)
-
            perror ("clock_getres");
-
        else
+           printf ("%d clock=%d sec=%ld nsec=%ld\n", i, clocks[i], res.tv_sec, res.tv_nsec);
+    }
+    for (i = 0; clocks[i] != (clockid_t) -1; i++) {
+        ret = clock_gettime(clocks[i],&timeres[i]);
+        if((clock_t)ret == -1){
+            perror("gettime fail");
+            printf("%d %d\n",i,ret);
+        }
+    }
+    sleep(5);
+    for (i = 0; clocks[i] != (clockid_t) -1; i++) {
+        ret = clock_gettime(clocks[i],&timeres2[i]);
+        if((clock_t)ret == -1){
+            perror("gettime fail");
+            printf("%d %d\n",i,ret);
+        }
+    }
 
-           printf ("clock=%d sec=%ld nsec=%ld\n", clocks[i], res.tv_sec, res.tv_nsec);
-
+    for (i = 0; clocks[i] != (clockid_t) -1; i++) {
+        printf("%d | %d | %ld %ld \n",i,clocks[i],timeres2[i].tv_sec-timeres[i].tv_sec,timeres2[i].tv_nsec-timeres[i].tv_nsec);
     }
 
     return 0;
