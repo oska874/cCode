@@ -23,6 +23,9 @@
     printf("write : mdio reg_addr value\n");\
     return -1;
 
+/*
+ * 详细的ioctl 选项参见 kernel/include/uapi/linux/sockios.h 定义
+ */
 int sockfd;
 
 int main(int argc, char *argv[])
