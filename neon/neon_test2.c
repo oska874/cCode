@@ -1,5 +1,6 @@
 #include <arm_neon.h>
 #include <stdio.h>
+#include <time.h>
 
 
 void neon_float_matrix_vec_mul(const float *matrix, const float *vec, float *vec_ret, int row, int col) {
@@ -31,7 +32,13 @@ int main()
                   2.9,3.0,3.1,3.2,
                   3.3,3.4,3.5,3.6};
     float mat3[MATRIX_SIZE];
+    struct timespec start,end;
+
+    clock_gettime(CLOCK_MONOTONIC_RAW,&start);
 	neon_float_matrix_vec_mul(mat1,mat2,&mat3[0],4,4);
+    clock_gettime(CLOCK_MONOTONIC_RAW,&end);
+    printf("vect cost %ld %ld\n",end.tv_sec - start.tv_sec,end.tv_nsec - start.tv_nsec);
+
     for(int i=0;i<MATRIX_SIZE;i++){
         printf("%f\n",mat3[i]);
     }
