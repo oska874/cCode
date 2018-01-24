@@ -15,6 +15,10 @@ endif
 
 endif
 
+ifeq ($(NUM), )
+$(error "NUM=?")
+endif
+
 QEMU=qemu-arm
 
 HARD=hard
@@ -32,8 +36,8 @@ CFLAGS = $(FLOAT_FLAGS)$(SOFT) $(NEON_FLAGS) $(CPU_FLAGS) -static #must compile 
 endif
 endif
 
-SRC_FILE = neon_test1.c
-LIB_FILE = neon_test1.o
+SRC_FILE = neon_$(NUM).c
+LIB_FILE = neon_$(NUM).o
 EXE_FILE = neon
 
 all: NEON_TEST
