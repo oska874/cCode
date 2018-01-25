@@ -12,7 +12,7 @@ else
 		NEON_FLAGS = -mfpu=neon #enable neon
 	else
 
-		ifeq ($(FLOAT), fpu)
+		ifeq ($(FLOAT), vfp)
 			CC=$(CROSS_COMPILE_HARD)gcc
 			LD=$(CROSS_COMPILE_HARD)ld
 		else
@@ -22,7 +22,7 @@ else
 endif
 
 ifeq ($(NUM), )
-	$(error "NUM=?")
+	$(error "NUM=test?")
 endif
 
 QEMU=qemu-arm
@@ -40,7 +40,7 @@ else
 	ifeq ($(FLOAT), soft)
 		CFLAGS = $(FLOAT_FLAGS)$(SOFT) $(NEON_FLAGS) $(CPU_FLAGS) -static #must compile with static,or cannot running in qemu-arm
 	else
-		ifeq ($(FLOAT), fpu)
+		ifeq ($(FLOAT), vfp)
 			CFLAGS = $(FLOAT_FLAGS)$(SOFT)  $(CPU_FLAGS) -static #must compile with static,or cannot running in qemu-arm
 		endif
 	endif
