@@ -1,6 +1,15 @@
 CROSS_COMPILE_HARD=arm-linux-gnueabihf-
 CROSS_COMPILE=arm-linux-gnueabi-
 
+NE10_LIB_PATH = /second/src/Ne10/build/modules
+NE10_INC_PATH = /second/src/Ne10/inc
+
+ifeq ($(NE10_ON),y)
+	NE10 = -lNE10
+	CFLAGS = -L$(NE10_LIB_PATH) -I$(NE10_INC_PATH)
+else
+	NE10 = 
+endif
 ifeq ($(FLOAT), hard)
 	CC=$(CROSS_COMPILE_HARD)gcc
 	LD=$(CROSS_COMPILE_HARD)ld
@@ -11,13 +20,7 @@ else
 		LD=$(CROSS_COMPILE)ld
 		NEON_FLAGS = -mfpu=neon #enable neon
 	else
-
-		ifeq ($(FLOAT), vfp)
-			CC=$(CROSS_COMPILE_HARD)gcc
-			LD=$(CROSS_COMPILE_HARD)ld
-		else
-			$(error "FLOAT=hard or soft?")
-		endif
+		$(error "FLOAT=hard or soft?")
 	endif
 endif
 
@@ -35,14 +38,10 @@ FLOAT_FLAGS = -mfloat-abi=#I used hard float arm gcc,softfp should used in norma
 CPU_FLAGS = -mcpu=cortex-a9 #cortex a serials have neon
 
 ifeq ($(FLOAT), hard)
-	CFLAGS = $(FLOAT_FLAGS)$(HARD) $(NEON_FLAGS) $(CPU_FLAGS) -static #must compile with static,or cannot running in qemu-arm
+	CFLAGS += $(FLOAT_FLAGS)$(HARD) $(NEON_FLAGS) $(CPU_FLAGS) -static #must compile with static,or cannot running in qemu-arm
 else
 	ifeq ($(FLOAT), soft)
-		CFLAGS = $(FLOAT_FLAGS)$(SOFT) $(NEON_FLAGS) $(CPU_FLAGS) -static #must compile with static,or cannot running in qemu-arm
-	else
-		ifeq ($(FLOAT), vfp)
-			CFLAGS = $(FLOAT_FLAGS)$(SOFT)  $(CPU_FLAGS) -static #must compile with static,or cannot running in qemu-arm
-		endif
+		CFLAGS += $(FLOAT_FLAGS)$(SOFT) $(NEON_FLAGS) $(CPU_FLAGS) -static #must compile with static,or cannot running in qemu-arm
 	endif
 endif
 
@@ -51,15 +50,15 @@ LIB_FILE = neon_$(NUM).o
 EXE_FILE = neon
 
 all: NEON_TEST
-	$(CC) $(CFLAGS) -o $(EXE_FILE) $(LIB_FILE)
+	$(CC) $(CFLAGS) -o $(EXE_FILE) $(LIB_FILE) $(NE10)
 	$(QEMU) $(EXE_FILE)
 	rm neon_$(NUM).o
 
 NEON_TEST: $(LIB_FILE)
 
 clean:
-	rm *.[oa]
 	rm neon
+	rm *.[oa]
 
 %.o:	%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
