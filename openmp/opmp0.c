@@ -50,6 +50,7 @@ static void sequencs(void)
     for (int i = 0; i < 10; i++ ) {
         printf("i = %d\n", i);
     }
+    printf("\n");
 }
 
 static void multi(void)
@@ -72,18 +73,19 @@ static void seq1(void)
     #pragma omp parallel for
     for (int i = 0; i < 100000; ++i) {
         c[i] = a[i] * b[i] + a[i-1] * b[i+1];
-        printf("%d ",c[i]);
+        //printf("%d ",c[i]);
     }
     // ... now do some processing with array c
+    printf("\n");
 }
 
 
 int main()
 {
-//    sequencs();
-//    multi();
-//    seq1();
-//    gettime();
+    sequencs();
+    multi();
+    seq1();
+    gettime();
     critical1();
     return 0;
 }
