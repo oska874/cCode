@@ -2,6 +2,7 @@
 #include <omp.h>
 #include <math.h>
 #include <time.h>
+#include <stdint.h>
 
 void critical1(void)
 {
@@ -82,10 +83,37 @@ static void seq1(void)
 
 int main()
 {
+    struct timespec start,end;
+    int32_t res=0;
+    double ratio,mult,single;
+
+#if 0
     sequencs();
     multi();
     seq1();
     gettime();
     critical1();
+#endif
+
+    ratio = 0;
+    for(int i=0;i<100;i++){
+        clock_gettime(CLOCK_MONOTONIC_RAW,&start);
+        res = calc_1();
+        clock_gettime(CLOCK_MONOTONIC_RAW,&end);
+        single = (end.tv_sec*1000000000+end.tv_nsec) - (start.tv_sec*1000000000 +start.tv_nsec);
+    //    printf("res %d time %d \n",res, (end.tv_sec*1000000000+end.tv_nsec) - (start.tv_sec*1000000000 +start.tv_nsec));
+
+
+        res = 0;
+        clock_gettime(CLOCK_MONOTONIC_RAW,&start);
+        res = calc_2();
+        clock_gettime(CLOCK_MONOTONIC_RAW,&end);
+        mult = (end.tv_sec*1000000000+end.tv_nsec) - (start.tv_sec*1000000000 +start.tv_nsec);
+     //   printf("res %d time %d \n",res, (end.tv_sec*1000000000+end.tv_nsec) - (start.tv_sec*1000000000 +start.tv_nsec));
+
+        printf("%d-%f\n",i,single/mult);
+        ratio+=single/mult;
+    }
+    printf("%f\n",ratio/100);
     return 0;
 }
