@@ -14,7 +14,8 @@ class derive:public base{
     public:
     int fun_a(int m,int n){cout <<"derive redefine"<<endl;return 0;}
     int fun_b(int m,double n){cout <<"derive overload"<<endl;return 0;}
-    int fun_b(float m,float n){cout <<"derive overload2"<<endl;return 0;}
+    int fun_b(int m){cout <<"derive overload 1"<<endl;return 0;}
+    int fun_b(int m,float n){cout <<"derive overload2"<<endl;return 0;}
     int fun_c(int m,int n){cout <<"derive override"<<endl;return 0;}
 };
 
@@ -30,10 +31,12 @@ int main()
     ba->fun_b(p,q);
     ba->fun_c(p,q);
     ba->fun_b(m,m);
+    //ba->fun_b(m);//wrong
 
     da->fun_a(p,q);
     da->fun_b(p,n);//int,double
-    da->fun_b(m,m);//float,float
+    da->fun_b(m,m);//float,float ->int,float
+    da->fun_b(m);//
     da->fun_c(p,q);
 
     return 0;
