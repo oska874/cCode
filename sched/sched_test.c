@@ -46,7 +46,7 @@ void voidvoid()
 
 void calcute()
 {
-    printf("max %llu min %llu avg %llu num %llu sum %llu overs %llu %llu %llu\n",max,min,avg,num,sum,overs,overs1,overs2);
+    printf("max %lu min %lu avg %lu num %lu sum %lu overs %lu %lu %lu\n",max,min,avg,num,sum,overs,overs1,overs2);
     fprintf(stderr," PID = %d\t scheduler %d priority: %d\tEND TIME is %ld\n",getpid(),sched_getscheduler(getpid()),getpriority(0,0),time(NULL));
     exit(0);
 }
@@ -84,14 +84,14 @@ int test_func()
 
         if (sold.tv_sec== 0 && sold.tv_usec ==0)
             goto next;
-//    printf("max %llu min %llu avg %llu num %llu sum %llu div %llu\n",max,min,avg,num,sum,div);
+//    printf("max %lu min %lu avg %lu num %lu sum %lu div %lu\n",max,min,avg,num,sum,div);
 
         sdiv.tv_sec=cur_time.tv_sec-sold.tv_sec;
         sdiv.tv_usec=cur_time.tv_usec-sold.tv_usec;
         div=sdiv.tv_sec*1000000+sdiv.tv_usec;
 #if 1
         if( div > over ){
-            printf("div large %llu %llu now %d %d %d %dn",
+            printf("div large %lu %lu now %ld %ld %ld %ldn",
                     div,over,cur_time.tv_sec,cur_time.tv_usec,sold.tv_sec,sold.tv_usec);
         }
         else{
@@ -105,7 +105,7 @@ int test_func()
         printf("install signal error\n"); 
     } 
 #endif
-    //printf("new %llu old %llu div %llu\n",time_u,told,div);
+    //printf("new %lu old %lu div %lu\n",time_u,told,div);
         num+=1;
         sum+=div;
         avg=sum/num;
@@ -191,6 +191,7 @@ int main(int argc,char* argv[])
         perror("set scheduler error:");
         return -4;
     }
+    printf("0\n");
     if (sched_method == SCHED_OTHER){
         ret = setpriority(0,0,sched_priority);
         if(ret <0){
@@ -198,11 +199,12 @@ int main(int argc,char* argv[])
             exit(-5);
         }
     }
+    printf("1\n");
 
-    fprintf(stderr,"the  scheduler of PID(%ld) is %d, priority (%d),BEGIN time is :%ld\n",
+    fprintf(stderr,"the  scheduler of PID(%d) is %d, priority (%d),BEGIN time is :%ld\n",
             getpid(),sched_getscheduler(0),getpriority(0,0),time(NULL));
     test_func();
-    printf("max %llu min %llu avg %llu num %llu sum %llu overs %llu %llu %llu\n",max,min,avg,num,sum,overs,overs1,overs2);
+    printf("max %lu min %lu avg %lu num %lu sum %lu overs %lu %lu %lu\n",max,min,avg,num,sum,overs,overs1,overs2);
     fprintf(stderr," PID = %d\t scheduler %d priority: %d\tEND TIME is %ld\n",getpid(),sched_getscheduler(getpid()),getpriority(0,0),time(NULL));
     return 0;
 }
