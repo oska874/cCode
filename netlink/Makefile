@@ -1,4 +1,5 @@
-obj-m += nlt.o        
+obj-m += nlt.o
+obj-m += nlt2.o 
 CURRENT_PATH := $(shell pwd)   #模块所在的当前路径
 LINUX_KERNEL := $(shell uname -r)    #Linux内核源代码的当前版本
 LINUX_KERNEL_PATH := /usr/src/linux-headers-$(LINUX_KERNEL) #Linux内核源代码的绝对路径
