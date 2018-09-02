@@ -12,7 +12,7 @@ MODULE_LICENSE("GPL");
 #define NETLINK_NETLINKTEST 22
 static struct sock *nltest_sock;
  
-static int nltest_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+static int nltest_rcv_msg(struct sk_buff *skb, struct nlmsghdr *nlh, struct netlink_ext_ack *nea)
 {
     char    *data;
  

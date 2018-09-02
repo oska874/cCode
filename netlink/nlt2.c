@@ -38,7 +38,7 @@ void send_netlink_data(char *message)
     slen = stringlength(message);
     nlh = nlmsg_put(skb_1,0,0,0,MAX_MSGSIZE,0);
 
-    NETLINK_CB(skb_1).pid = 0;
+    NETLINK_CB(skb_1).portid = 0;
     NETLINK_CB(skb_1).dst_group = 0;
 
     memcpy(NLMSG_DATA(nlh),message,slen+1);
@@ -74,7 +74,11 @@ void recv_netlink_data(struct sk_buff *__skb)
 // Initialize netlink
 int netlink_init(void)
 {
-    nl_sk = netlink_kernel_create(&init_net, NETLINK_TEST, 1, recv_netlink_data, NULL, THIS_MODULE);
+    struct netlink_kernel_cfg cfg = {
+        .input = recv_netlink_data,
+    };
+
+    nl_sk = netlink_kernel_create(&init_net, NETLINK_TEST,&cfg);// 1, recv_netlink_data, NULL, THIS_MODULE);
     if(!nl_sk) {
         printk(KERN_ERR "my_net_link: create netlink socket error.\n");
         return 1;
