@@ -26,11 +26,11 @@ void neon_float_matrix_vec_mul(const float *matrix, const float *vec, float *vec
     }
 }
 
+
 void neon_float_matrix_mul(const float *matrix, const float *vec, float *vec_ret, int row, int col,int col2)
 {
     float32x4_t va,vb;
-    float32x4_t *vc = malloc(row*sizeof(float32x4_t));
-    
+    float32x4_t vc[20];//malloc uses too much time
     
     for(int i =0;i<12;i++){
         vc[i] = vdupq_n_f32(0.0f);
@@ -120,7 +120,7 @@ void int_matrix_mul(int *mat, int *vec, int *vec_ret, int row1, int col, int col
 }
 
 int main()
-{
+{ 
     const int MATRIX_SIZE = 48;
     float mat1[]= {1.1,1.2,1.3,1.4,
                    1.5,1.6,1.7,1.8,
