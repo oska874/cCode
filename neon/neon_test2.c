@@ -29,7 +29,7 @@ void neon_float_matrix_vec_mul(const float *matrix, const float *vec, float *vec
 void neon_float_matrix_mul(const float *matrix, const float *vec, float *vec_ret, int row, int col,int col2)
 {
     float32x4_t va,vb;
-    float32x4_t vc[12];//for test
+    float32x4_t *vc = malloc(row*sizeof(float32x4_t));
     
     
     for(int i =0;i<12;i++){
