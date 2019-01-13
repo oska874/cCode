@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
     }
 #endif
 
-#if 0
+#if 1
     fd1 = open("./dir1", O_CREAT|O_WRONLY, S_IRWXU|S_IRWXG|S_IROTH);
     if(fd1 < 0) {
         perror("open fd1 fail:");
@@ -213,10 +213,10 @@ int main(int argc, char *argv[])
         return -3;
     }
     sub_thread_data_info->fd        = fd2;
-    sub_thread_data_info->start     = raw_data + count*FRAME_SIZE;///2 ;//+ FRAME_SIZE/2;
+    sub_thread_data_info->start     = raw_data + count*FRAME_SIZE/2 + FRAME_SIZE/2;
     sub_thread_data_info->blk_size  = BK_SIZE;
     sub_thread_data_info->gap_size  = GAP_SIZE;
-    sub_thread_data_info->blk_num   = RX_ALL*tx_num;
+    sub_thread_data_info->blk_num   = RX_ALL*tx_num/2;
     sub_thread_data_info->big_gap_cnt   = TX_ALL - tx_num;
     sub_thread_data_info->big_gap_size  = (TX_ALL-tx_num)*(SECTOR_SIZE);
 
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
     pthread_create(&pc1, NULL, &write_data, sub_thread_data_info);
 #endif
 
-#if 0
+#if 1
     //for main thread
     wf6_temp.fd = fd1;
     wf6_temp.start = raw_data + count*FRAME_SIZE/2;
@@ -238,9 +238,17 @@ int main(int argc, char *argv[])
     int32_t bg_cnt;
     int32_t bk_num = 8;//wf6_temp.blk_num;
 
-    struct iocb *iocbpp[bk_num] ;
-    struct iocb cbs[bk_num];
-    struct io_event events[bk_num];
+    struct iocb **iocbpp ;
+    struct iocb *cbs;
+    struct io_event *events;
+
+    events = malloc(sizeof(struct io_event)*bk_num);
+    iocbpp = malloc(sizeof(struct iocb *)*bk_num);
+    cbs = malloc(sizeof(struct iocb)*bk_num);
+    if(events == NULL || iocbpp == NULL || cbs == NULL){
+        perror("y");
+        return;
+    }
 
     aio_context_t ctx1;
     memset(&ctx1, 0, sizeof(ctx1));
@@ -256,22 +264,22 @@ int main(int argc, char *argv[])
         while(data_ok != 1);
         printf("prepare sub\n");
         //update for subthread
-        sub_thread_data_info->start = raw_data + count*FRAME_SIZE;///2 + FRAME_SIZE/2;
+        sub_thread_data_info->start = raw_data + count*FRAME_SIZE + FRAME_SIZE/2;
         sub_thread_data_info->fd = fd2;
         sub_thread_data_info->blk_size = BK_SIZE;
         sub_thread_data_info->gap_size = GAP_SIZE;
-        sub_thread_data_info->blk_num = RX_ALL*tx_num;
+        sub_thread_data_info->blk_num = RX_ALL*tx_num/2;
         sub_thread_data_info->big_gap_cnt = TX_ALL - tx_num;
         sub_thread_data_info->big_gap_size = (TX_ALL-tx_num)*(SECTOR_SIZE);
         //command sub thread starting writing
         data_ok = 2;
 #endif
 
-#if 0
+#if 1
         printf("prepare main\n");
         //construct struct for main thread
         wf6_temp.fd = fd1;
-        wf6_temp.start = raw_data + count*FRAME_SIZE/2;
+        wf6_temp.start = raw_data + count*FRAME_SIZE;
         wf6_temp.blk_size = BK_SIZE;
         wf6_temp.gap_size = GAP_SIZE;
         wf6_temp.blk_num = RX_ALL*tx_num/2;
@@ -323,7 +331,8 @@ int main(int argc, char *argv[])
 
     }
 end:
-#if 0
+#if 1
+    pthread_cancel(pc1);
     io_destroy(ctx1);
 #endif
     pthread_join(pc1, NULL);
