@@ -24,7 +24,7 @@
 #define FRAME_SIZE  ZONE_SIZE
 
 
-#define SUBT    0
+#define SUBT    1
 #define MAINT   1
 struct wf6_struct {
     int32_t fd;
@@ -63,7 +63,7 @@ void *create_raw_data(int32_t tx_num)
             }
         }
     }
-#if 1
+#if 0
 #if 0
     for(int i=0; i<512; i++) {
         printf("%x=%x\n", *(uint8_t*)(buf+i*256), *(uint8_t*)(buf+i*256+192));
@@ -106,7 +106,6 @@ void write_data(void *ptr)
 
     fd = temp->fd;
     printf("fd11 %d\n",fd);
-
 
     events = malloc(sizeof(struct io_event)*bk_num);
     iocbpp = malloc(sizeof(struct iocb *)*bk_num);
