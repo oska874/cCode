@@ -23,6 +23,9 @@
 #define ZONE_SIZE SECTOR_SIZE*RX_ALL*TX_ALL //1 frame
 #define FRAME_SIZE  ZONE_SIZE
 
+
+#define SUBT    0
+#define MAINT   1
 struct wf6_struct {
     int32_t fd;
     off_t   start;
@@ -147,7 +150,7 @@ void write_data(void *ptr)
             }
 
             cbs[i].aio_buf            = cbs[i].aio_data;
-            printf("2=%d= %x addr %x - val %x %d %x\n",i, buf_pos, cbs[i].aio_data, *(uint8_t*)(cbs[i].aio_data), bg_cnt,temp->big_gap_size);
+//            printf("2=%d= %x addr %x - val %x %d %x\n",i, buf_pos, cbs[i].aio_data, *(uint8_t*)(cbs[i].aio_data), bg_cnt,temp->big_gap_size);
             cbs[i].aio_lio_opcode     = IOCB_CMD_PWRITE;
             cbs[i].aio_nbytes         = BK_SIZE;
             cbs[i].aio_offset         = pos+i*BK_SIZE;
@@ -186,7 +189,7 @@ int main(int argc, char *argv[])
     else{
         return -1;
     }
-#if 1
+#if SUBT == 1
     fd2 = open("./dir2", O_CREAT|O_WRONLY, S_IRWXU|S_IRWXG|S_IROTH);
     if(fd2 < 0) {
         perror("open fd2 fail:");
@@ -194,7 +197,7 @@ int main(int argc, char *argv[])
     }
 #endif
 
-#if 1
+#if MAINT == 1
     fd1 = open("./dir1", O_CREAT|O_WRONLY, S_IRWXU|S_IRWXG|S_IROTH);
     if(fd1 < 0) {
         perror("open fd1 fail:");
@@ -202,10 +205,9 @@ int main(int argc, char *argv[])
     }
     printf("fd1 %d\n",fd1);
 #endif
-
     printf("tx %d\n",tx_num);
     raw_data = create_raw_data(tx_num);
-#if 1
+#if SUBT == 1
     //for subthread
     sub_thread_data_info = malloc(sizeof(struct wf6_struct));
     if(sub_thread_data_info == NULL) {
@@ -213,21 +215,20 @@ int main(int argc, char *argv[])
         return -3;
     }
     sub_thread_data_info->fd        = fd2;
-    sub_thread_data_info->start     = raw_data + count*FRAME_SIZE/2 + FRAME_SIZE/2;
+    sub_thread_data_info->start     = raw_data + count*FRAME_SIZE + FRAME_SIZE/2;
     sub_thread_data_info->blk_size  = BK_SIZE;
     sub_thread_data_info->gap_size  = GAP_SIZE;
     sub_thread_data_info->blk_num   = RX_ALL*tx_num/2;
     sub_thread_data_info->big_gap_cnt   = TX_ALL - tx_num;
     sub_thread_data_info->big_gap_size  = (TX_ALL-tx_num)*(SECTOR_SIZE);
-
     pthread_t pc1;
     pthread_create(&pc1, NULL, &write_data, sub_thread_data_info);
 #endif
 
-#if 1
+#if MAINT == 1
     //for main thread
     wf6_temp.fd = fd1;
-    wf6_temp.start = raw_data + count*FRAME_SIZE/2;
+    wf6_temp.start = raw_data + count*FRAME_SIZE;
     wf6_temp.blk_size = BK_SIZE;
     wf6_temp.gap_size = GAP_SIZE;
     wf6_temp.blk_num = RX_ALL*tx_num/2;
@@ -236,7 +237,7 @@ int main(int argc, char *argv[])
     off_t buf_pos;
     off_t pos =0;
     int32_t bg_cnt;
-    int32_t bk_num = 8;//wf6_temp.blk_num;
+    int32_t bk_num = wf6_temp.blk_num;
 
     struct iocb **iocbpp ;
     struct iocb *cbs;
@@ -260,7 +261,7 @@ int main(int argc, char *argv[])
 #endif
     //seperate one frame into two part
     while(1) {
-#if 1
+#if SUBT == 1
         while(data_ok != 1);
         printf("prepare sub\n");
         //update for subthread
@@ -275,7 +276,7 @@ int main(int argc, char *argv[])
         data_ok = 2;
 #endif
 
-#if 1
+#if MAINT == 1
         printf("prepare main\n");
         //construct struct for main thread
         wf6_temp.fd = fd1;
@@ -284,19 +285,21 @@ int main(int argc, char *argv[])
         wf6_temp.gap_size = GAP_SIZE;
         wf6_temp.blk_num = RX_ALL*tx_num/2;
         wf6_temp.big_gap_cnt = TX_ALL - tx_num;
-        wf6_temp.big_gap_size = wf6_temp.big_gap_cnt*(SECTOR_SIZE);
+        wf6_temp.big_gap_size = (TX_ALL - tx_num)*(SECTOR_SIZE);
 
-        bk_num = wf6_temp.blk_num;
         buf_pos = wf6_temp.start;
         bg_cnt = TX_ALL - wf6_temp.big_gap_cnt;
         memset(iocbpp, 0, 4*bk_num);
-        printf("bk %d %d\n",bk_num,wf6_temp.fd);
+        bk_num = wf6_temp.blk_num;
+        printf("bk %d %d %d\n",bk_num,wf6_temp.fd,bg_cnt);
         for(int i=0; i<bk_num; i++){
+            printf("i%d\n",i);
             cbs[i].aio_fildes         = wf6_temp.fd;
             cbs[i].aio_data           = buf_pos;
             if(bg_cnt == 0) {
                 cbs[i].aio_data       += wf6_temp.big_gap_size;
                 bg_cnt                 = TX_ALL - wf6_temp.big_gap_cnt;
+                printf("bg %d\n",bg_cnt);
                 buf_pos               += wf6_temp.big_gap_size ;
             }
             cbs[i].aio_buf            = cbs[i].aio_data;
@@ -306,8 +309,8 @@ int main(int argc, char *argv[])
             iocbpp[i]                 = &cbs[i];
             buf_pos += SECTOR_SIZE;
             bg_cnt--;
-//            printf("1=%d= %x addr %x - val %x %d %x\n",i, buf_pos, cbs[i].aio_data, *(uint8_t*)(cbs[i].aio_data), bg_cnt,wf6_temp.big_gap_size);
-            printf("buf %x of %x nb %d start %x\n",cbs[i].aio_buf, cbs[i].aio_offset, cbs[i].aio_nbytes,wf6_temp.start);
+            printf("1=%d= %x addr %x - val %x %d %x\n",i, buf_pos, cbs[i].aio_data, *(uint8_t*)(cbs[i].aio_data), bg_cnt,wf6_temp.big_gap_size);
+//            printf("buf %x of %x nb %d start %x\n",cbs[i].aio_buf, cbs[i].aio_offset, cbs[i].aio_nbytes,wf6_temp.start);
         }
         printf("DD %d\n",bk_num);
         int n = io_submit(ctx1, bk_num, iocbpp);
@@ -331,11 +334,13 @@ int main(int argc, char *argv[])
 
     }
 end:
-#if 1
+#if SUBT == 1
     pthread_cancel(pc1);
+    pthread_join(pc1, NULL);
+#endif
+#if MAINT == 1
     io_destroy(ctx1);
 #endif
-    pthread_join(pc1, NULL);
     free(raw_data);
     return 0;
 }
