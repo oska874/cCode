@@ -56,6 +56,7 @@ void *create_raw_data(int32_t tx_num)
     uint8_t val = 1;
     memset(buf, 0, RAW_DATA_TOT_SIZE);
 
+    //construct data
     for(int k=0;k<2;k++){
         for(int i=0; i<RX_ALL; i++) {//rx
             for(int j=0; j<tx_num; j++) {//tx
@@ -64,6 +65,7 @@ void *create_raw_data(int32_t tx_num)
         }
     }
 #if 0
+    //test
 #if 0
     for(int i=0; i<512; i++) {
         printf("%x=%x\n", *(uint8_t*)(buf+i*256), *(uint8_t*)(buf+i*256+192));
@@ -81,7 +83,6 @@ void *create_raw_data(int32_t tx_num)
     }
     close(fd);
 #endif
-
     return buf;
 }
 
@@ -181,6 +182,7 @@ int main(int argc, char *argv[])
     int32_t fd1,fd2;
     uint32_t count =0;
 
+    int32_t times = 0;
     if(argc >1){
         tx_num = atoi(argv[1]);
         printf("%d\n",tx_num);
@@ -206,6 +208,7 @@ int main(int argc, char *argv[])
 #endif
     printf("tx %d\n",tx_num);
     raw_data = create_raw_data(tx_num);
+redo:
 #if SUBT == 1
     //for subthread
     sub_thread_data_info = malloc(sizeof(struct wf6_struct));
@@ -220,6 +223,7 @@ int main(int argc, char *argv[])
     sub_thread_data_info->blk_num   = RX_ALL*tx_num/2;
     sub_thread_data_info->big_gap_cnt   = TX_ALL - tx_num;
     sub_thread_data_info->big_gap_size  = (TX_ALL-tx_num)*(SECTOR_SIZE);
+
     pthread_t pc1;
     pthread_create(&pc1, NULL, &write_data, sub_thread_data_info);
 #endif
@@ -259,6 +263,8 @@ int main(int argc, char *argv[])
     }
 #endif
     //seperate one frame into two part
+    off_t wrote_off;
+    wrote_off = 0;
     while(1) {
 #if SUBT == 1
         while(data_ok != 1);
@@ -330,6 +336,10 @@ int main(int argc, char *argv[])
         if( count ==2){
             count = 0;
         }
+        wrote_off += BK_SIZE*bk_num;
+        if(wrote_off > 4*192*10){
+            goto end;
+        }
 
     }
 end:
@@ -341,6 +351,11 @@ end:
     io_destroy(ctx1);
 #endif
     free(raw_data);
+    if(times <= 3){
+        times++;
+        printf("redo %d\n",times);
+        goto redo;
+    }
     return 0;
 }
 
