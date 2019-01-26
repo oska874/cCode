@@ -36,31 +36,24 @@ void search_dir ( const char * name )
 	strcpy(pathBak, path);
 	strncat( path, name, sizeof( path ));
 
-	if (DBG_SEQ) LOGI( "searching %s\n", path );
-
+	if (DBG_SEQ) 
+        LOGI( "searching %s\n", path );
 	if( stat( path, &_stbuf ) == 0 ) {
-
 		if( S_ISDIR( _stbuf.st_mode )) {
 			DIR * _dir;
 			struct dirent * _file;
-			
 			_dir	=	opendir( path );
-
 			if( _dir ) {
-				
-				if (DBG_SEQ) LOGD("find folder %s\n", path);
-
+				if (DBG_SEQ) 
+                    LOGD("find folder %s\n", path);
 				//Caution : no need to do this unless there is a empty folder
 				//zip_dir_add(z, name, ZIP_FL_ENC_GUESS); 
-
 				strncat( path, "/", sizeof( path ));
-
 				while(( _file = readdir( _dir )) != NULL ) {
 					if( strncmp( _file->d_name, ".", 1 ) != 0 ) {
 						search_dir( _file->d_name);
 					}
 				}
-
 				closedir( _dir );
 			}
 			else {
@@ -68,14 +61,14 @@ void search_dir ( const char * name )
 			}
 		}
 		else {
-			if (DBG_SEQ) LOGD("find file %s\n", path);
+			if (DBG_SEQ) 
+                LOGD("find file %s\n", path);
 
 			struct zip_source *s = zip_source_file(z, path, 0, -1);
 			if(s != NULL) {
 				// the file name give to zip_file_add() would include the path
 				zip_file_add(z, &path[root_len+1], s,
 					ZIP_FL_OVERWRITE|ZIP_FL_ENC_GUESS);
-
 				//would be used and freed by zip_close(),
 				//so don't free the zip_source here.
 				//zip_source_free(s); 
@@ -88,7 +81,6 @@ void search_dir ( const char * name )
 	else {
 		LOGE( "stat failed\n" );
 	}
-
 	/* remove parsed name */
 	strcpy(path, pathBak);
 }
