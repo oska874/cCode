@@ -80,3 +80,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+bazel-bazel
+bazel-bin
+bazel-out
+bazel-testlogs
