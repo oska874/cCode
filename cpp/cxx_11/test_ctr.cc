@@ -2,6 +2,36 @@
 #include <vector>
 #include <algorithm>
 
+#if 0
+//?
+template<typename T, typename... Ts>
+auto printf3(T value, Ts... args)
+{
+    std::cout<<value<<std::endl;
+    (void)std::initializer_list<T>{
+        ([&args]{ std::cout<<args<<std::endl;}(), value)...
+    };
+}
+#endif
+
+template <auto X>
+void buffs2()
+{
+    std::cout<<X<<std::endl;
+}
+
+template<typename T, int size>
+auto buffs(T val)
+{
+    return sizeof(val)*size;
+}
+
+template<typename ...T>
+auto sum(T ... t)
+{
+    return (t+...);
+}
+
 template <typename T>
 auto print_type_info(const T& p)
 {
@@ -17,6 +47,12 @@ auto print_type_info(const T& p)
     {
         return p+0.0001;
     }
+}
+
+template <typename... TS>
+void magic(TS... args)
+{
+    std::cout<<sizeof...(args)<<std::endl;
 }
 
 int main()
@@ -43,5 +79,15 @@ int main()
         std::cout<<elm<<std::endl;
     }
 
+    magic();
+    magic(1);
+    magic(1,2,3);
+    magic(1,2,3,4,5,6,7,8,9,0);
+
+    //printf3(1,2,3,4);
+    std::cout<<sum(1,2,3)<<std::endl;
+
+    std::cout<<buffs<double, 10>(10)<<std::endl;
+    buffs2<10>();
     return 0;
 }
