@@ -1,4 +1,5 @@
 # cCode
+## C
 reference snippets.
 
 - openmp : 多线程编程框架
@@ -34,3 +35,22 @@ linux sys program
 - construct : 编译框架，包括cmake 和scons（依赖python）  
 
 - mem: 内存操作
+
+## Cpp
+
+- variable type cast
+
+- exception 
+
+- stream
+
+- simple template
+
+- concurrence
+
+- vector
+
+- oop
+
+- lambda
+

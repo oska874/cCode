@@ -89,3 +89,5 @@ bazel-testlogs
 .vscoide/*
 *.pb.cc
 *.pb.h
+
+*~
